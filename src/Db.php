@@ -1,4 +1,4 @@
-<?php namespace Sys;
+<?php namespace Msz;
 
 class Db
 {
