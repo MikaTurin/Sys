@@ -1,5 +1,4 @@
-<?php
-namespace Sys;
+<?php namespace Sys;
 
 class Db
 {
