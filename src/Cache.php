@@ -7,10 +7,10 @@ class Cache
     protected static $host = 'localhost';
 
     /** @var \Memcache */
-    static $memcache = null;
-    static $flag = MEMCACHE_COMPRESSED;
-    static $prefix = 'club';
-    static $useCleanQueue = true;
+    protected static $memcache = null;
+    protected static $flag = MEMCACHE_COMPRESSED;
+    protected static $prefix = 'club';
+    protected static $useCleanQueue = true;
 
     /**
      * @param  array $options host, connect, flag, prefix
@@ -18,7 +18,6 @@ class Cache
      */
     static function initialize(array $options)
     {
-
         if (isset($options['host'])) self::$host = $options['host'];
         if (isset($options['flag'])) self::$flag = $options['flag'];
         if (isset($options['useCleanQueue'])) self::$useCleanQueue = $options['useCleanQueue'];
@@ -37,7 +36,6 @@ class Cache
      */
     static function connect($host = null)
     {
-
         if (self::$connected) return true;
         if (self::$connected === false) return false;
 
@@ -65,7 +63,6 @@ class Cache
      */
     static function flush()
     {
-
         if (!self::connect()) return;
 
         self::$memcache->flush();
@@ -82,7 +79,6 @@ class Cache
      */
     static function set($key, $var, $expires = 3600, $compress = false)
     {
-
         if (!self::connect()) return false;
 
         if (!is_numeric($expires)) die('Cache class: set expires is not numeric!');
@@ -103,7 +99,6 @@ class Cache
      */
     static function add($key, $var, $expires = 3600, $compress = false)
     {
-
         if (!self::connect()) return false;
 
         if (!is_numeric($expires)) die('Cache class: set expires is not numeric!');
@@ -124,7 +119,6 @@ class Cache
      */
     static function replace($key, $var, $expires = 3600, $compress = false)
     {
-
         if (!self::connect()) return false;
 
         if (!is_numeric($expires)) die('Cache class: set expires is not numeric!');
@@ -141,7 +135,6 @@ class Cache
      */
     static function get($key)
     {
-
         if (!self::connect()) return false;
 
         if (self::$useCleanQueue && self::inCleanQueue($key)) return false;
@@ -155,7 +148,6 @@ class Cache
      */
     static function delete($key)
     {
-
         if (!self::connect()) return false;
 
         return self::$memcache->delete(self::$prefix . $key, 0);
@@ -163,7 +155,6 @@ class Cache
 
     static function increment($key, $value = 1)
     {
-
         if (!self::connect()) return false;
 
         return self::$memcache->increment(self::$prefix . $key, $value);
@@ -178,7 +169,6 @@ class Cache
      */
     static function cleanQueue($key, $seconds = 0)
     {
-
         if (!self::connect()) return;
 
         $r = self::$memcache->get(self::$cachekey);
@@ -194,7 +184,6 @@ class Cache
 
     static function inCleanQueue($key)
     {
-
         if (!self::connect()) return false;
 
         $r = self::$memcache->get(self::$cachekey);
@@ -212,7 +201,6 @@ class Cache
 
     static function flushQueue()
     {
-
         if (!self::connect()) return;
 
         self::$memcache->delete(self::$cachekey, 0);
@@ -220,7 +208,6 @@ class Cache
 
     static function getCacheKeys()
     {
-
         if (!self::connect()) return false;
 
         return self::$memcache->get(self::$cachekey);
@@ -237,7 +224,6 @@ class Cache
      */
     static function listPush($list_name, $value, $expires = 3600, $cnt = 0)
     {
-
         if (empty($list_name)) return false;
 
         $klst = 'list:' . $list_name . ':';
@@ -266,7 +252,6 @@ class Cache
      */
     static function listTrim($list_name)
     {
-
         $klst = 'list:' . $list_name . ':';
         $kidx = 'list:' . $list_name . ':idx';
         $klck = 'list:' . $list_name . ':lock';
@@ -290,7 +275,6 @@ class Cache
 
     protected static function listIncrementKey($k, $cnt = 0)
     {
-
         $idx = self::increment($k);
         if ($idx !== false && is_numeric($idx)) return $idx;
         $i = self::add($k, 1, 0);
