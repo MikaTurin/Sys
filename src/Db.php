@@ -212,7 +212,7 @@ class Db
         return static::query($q);
     }
 
-    protected static function getFields($r)
+    public static function getFields($r)
     {
         if (!is_array($r)) {
             return "`id`='{$r}'";
